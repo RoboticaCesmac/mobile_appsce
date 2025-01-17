@@ -27,5 +27,5 @@ export const medalhas: Record<medalhaType, ImageSourcePropType> = {
     ouro: require('../assets/icones/medalha-ouro.png'),
     prata: require('../assets/icones/medalha-prata.png'),
     bronze: require('../assets/icones/medalha-bronze.png'),
-    cobre: require('../assets/icones/medalha-cobre.png')
+    cobre: require('../assets/icones/medalha-cobre.png'),
 }

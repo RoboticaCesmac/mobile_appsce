@@ -1,16 +1,15 @@
-import {StyleProp, ViewStyle, Image, TouchableOpacity, TextStyle, TextProps } from 'react-native';
+import {StyleProp, ViewStyle, Image,  TextStyle, TextProps, TouchableOpacity } from 'react-native';
 import Texto from '@/src/components/texto';
 import { iconeType, icones } from '@/src/types/icones';
 
 import { styles } from './styles';
-import { TouchableOpacityProps } from 'react-native-gesture-handler';
 import { cores } from '@/src/themes/cores';
 
 interface IBotaoProps extends TextProps {
     iconeEsquerda?: iconeType,
     iconeDireita?: iconeType,
     titulo?: string,
-    textColor?: string,
+    textColor?: string
 }
 
 /**

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Text, TextProps, View, Image, TouchableOpacity } from "react-native";
+import { Text, TextProps } from "react-native";
 
 interface ITexto extends TextProps {
     children?: ReactNode,

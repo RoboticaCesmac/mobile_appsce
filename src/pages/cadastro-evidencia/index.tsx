@@ -1,4 +1,4 @@
-import { Image,  View, ToastAndroid, ScrollView, } from 'react-native';
+import { Image,  View, ToastAndroid, ScrollView } from 'react-native';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRoute } from '@react-navigation/native';
@@ -28,6 +28,8 @@ import newAvaliacao from '@/src/template/newAvaliacao';
 import { IProjeto } from '@/src/interfaces/projeto';
 import { IUsuario } from '@/src/interfaces/usuario';
 import { medalhaType } from '@/src/types/icones';
+import Tooltip from '@/src/components/tooltip';
+import { TouchableOpacity } from 'react-native';
 
 
 export default function TelaCadastroEvidencia(){
@@ -41,6 +43,7 @@ export default function TelaCadastroEvidencia(){
     const projetoRecebido: IProjeto = (useRoute().params as INavigationCadastroEvidencia).projeto;
     const evidenciaAEditar: IEvidencia | undefined = (useRoute().params as INavigationCadastroEvidencia).evidencia;
     
+    const [tooltipMedalhaVisivel, setTooltipMedalhaVisivel] = useState<boolean>(false);
     const [avaliacao, setAvaliacao] = useState<IAvaliacao>(newAvaliacao());
     const [evidencia, setEvidencia] = useState<IEvidencia>(newEvidencia());
     const [estadoLoading, setEstadoLoading] = useState<string>("");
@@ -58,7 +61,7 @@ export default function TelaCadastroEvidencia(){
         try{
             const dadosUsuario = doc(db, "usuarios", auth.currentUser!.uid);
             let usuario:IUsuario = (await getDoc(dadosUsuario)).data() as IUsuario;
-            if(usuario.tipoAvaliador!==""){
+            if(usuario.tipoAvaliador!=="" && projetoRecebido.uid !== auth.currentUser?.uid){
                 setPagina(1);
             }else{
                 setPagina(0);
@@ -112,7 +115,7 @@ export default function TelaCadastroEvidencia(){
         try{
             setEstadoLoading("Salvando...");
 
-            let erro:IErroEvidencia|boolean|undefined = validarCamposEvidencia(evidencia);
+            let erro:IErroEvidencia|boolean|undefined = validarCamposEvidencia(evidencia, evidencia);
 
             if(erro){
                 erro = erro as IErroEvidencia;
@@ -248,7 +251,7 @@ export default function TelaCadastroEvidencia(){
         try{
             setEstadoLoading("Salvando...");
 
-            let erro:IErroEvidencia|boolean|undefined = validarCamposEvidencia(evidencia, true);
+            let erro:IErroEvidencia|boolean|undefined = validarCamposEvidencia(evidencia, evidencia, true);
 
             if(erro){
                 erro = erro as IErroEvidencia;
@@ -289,7 +292,7 @@ export default function TelaCadastroEvidencia(){
     //Passa para a próxima página
     const avancarPagina = ()=>{
         try{
-            let erro:IErroEvidencia|boolean|undefined = validarCamposEvidencia(evidencia[("avaliador"+avaliador)as keyof typeof evidencia] as IAvaliacao);
+            let erro:IErroEvidencia|boolean|undefined = validarCamposEvidencia(evidencia[("avaliador"+avaliador)as keyof typeof evidencia] as IAvaliacao, evidencia);
             if(erro){
                 erro = erro as IErroEvidencia;
                 if(erro.pagina === pagina){
@@ -321,12 +324,12 @@ export default function TelaCadastroEvidencia(){
                         <>
                             <Texto style={styles.titulo2}>{modo==="cadastrar"?"CADASTRO":"EDIÇÃO"} DE EVIDÊNCIA</Texto>
                             <View style={styles.containerScroll}>
-                            <ScrollView contentContainerStyle={styles.cardScroll}>
+                            <ScrollView contentContainerStyle={[styles.cardScroll, {height: 450}]}>
                                 <InputPersonalizado style={campoComErro === "categoria" ? styles.inputErro : {}} onValueChange={(itensSelecionados)=>setEvidencia({...evidencia, categoria: itensSelecionados[0] as tipoEvidencia})}  titulo='Qual o tipo da sua evidência?' placeholder='Selecione' itensSelect={[{valor: "hardware", descricao: "Hardware"}, {valor: "software", descricao: "Software"}]} valoresSelecionadosSelect={[evidencia.categoria]} tooltipTexto='Descreva o tipo da sua evidência (hardware ou software).'/>
 
                                 <InputPersonalizado style={campoComErro === "nome" ? styles.inputErro : {}} value={evidencia.nome} onChangeText={(valor)=>setEvidencia({...evidencia, nome: valor})}  titulo='Nome' placeholder='Nome da evidência' tooltipTexto='Nome da evidência deve transmitir a essência da evidência, de forma sucinta.'/>
 
-                                <InputPersonalizado style={campoComErro === "palavrasChave" ? styles.inputErro : {}} value={evidencia.palavrasChave} onChangeText={(valor)=>setEvidencia({...evidencia, palavrasChave: valor})}  titulo='Palavras chave' placeholder='Separadas por vírgula. Ex: teste, palavra' tooltipTexto={'Descrever brevemente o tópico em questão e a importância da evidência na discussão. \n\nAjudará a entender a descrição mais abstrata da evidência a seguir.'}/>
+                                <InputPersonalizado returnKeyType="go" onSubmitEditing={()=>cadastrarEvidencia()} style={campoComErro === "palavrasChave" ? styles.inputErro : {}} value={evidencia.palavrasChave} onChangeText={(valor)=>setEvidencia({...evidencia, palavrasChave: valor})}  titulo='Palavras chave' placeholder='Separadas por vírgula. Ex: teste, palavra' tooltipTexto={'Descrever brevemente o tópico em questão e a importância da evidência na discussão. \n\nAjudará a entender a descrição mais abstrata da evidência a seguir.'}/>
 
                                 <InputPersonalizado  multiline={true} style={[{height: 130}, campoComErro === "contextualizacao" ? styles.inputErro : {}]} value={evidencia.contextualizacao} onChangeText={(valor)=>setEvidencia({...evidencia, contextualizacao: valor})}  titulo='Contextualização' placeholder='Contextualização breve' tooltipTexto={'Descrever brevemente o tópico em questão e a importância da evidência na discussão. \n\nAjudará a entender a descrição mais abstrata da evidência a seguir.'}/>
 
@@ -342,8 +345,13 @@ export default function TelaCadastroEvidencia(){
 
                             <View style={styles.containerScroll}>
                                 <ScrollView contentContainerStyle={styles.cardScroll}>
+                                    <TouchableOpacity onPressIn={()=>setTooltipMedalhaVisivel(true)} onPressOut={()=>setTooltipMedalhaVisivel(false)} style={{top: 20, right: 20, zIndex: 999, position: "absolute"}}>
+                                        <Image style={{ width: 20, height: 20}} source={require("./../../assets/icones/dica.png")}/>
+                                        <Tooltip visivel={tooltipMedalhaVisivel} texto='Esta evidência foi classificada automaticamente com base na decisão predominante entre os avaliadores mencionados.'/>
+                                    </TouchableOpacity>
                                     {evidencia.final.idAvaliador !== "" ?
                                         <View style={styles.containerMedalha}>
+                                            
                                             {evidencia.final.selo === 'ouro' && <Image resizeMode='contain' style={styles.iconeMedalha} source={require("./../../assets/icones/medalha-ouro.png")}/>}
                                             {evidencia.final.selo === 'prata' && <Image resizeMode='contain' style={styles.iconeMedalha} source={require("./../../assets/icones/medalha-prata.png")}/>}
                                             {evidencia.final.selo === 'bronze' && <Image resizeMode='contain' style={styles.iconeMedalha} source={require("./../../assets/icones/medalha-bronze.png")}/>}
@@ -451,7 +459,7 @@ export default function TelaCadastroEvidencia(){
 
                                         <InputPersonalizado style={campoComErro === "palavrasChave" ? styles.inputErro : {}} value={evidencia.palavrasChave} onChangeText={(valor)=>setEvidencia({...evidencia, palavrasChave: valor})}  titulo='Palavras chave' placeholder='Separadas por vírgula. Ex: teste, palavra' tooltipTexto={'Descrever brevemente o tópico em questão e a importância da evidência na discussão. \n\nAjudará a entender a descrição mais abstrata da evidência a seguir.'}/>
 
-                                        <InputPersonalizado  multiline={true} style={[{height: 130}, campoComErro === "contextualizacao" ? styles.inputErro : {}]} value={evidencia.contextualizacao} onChangeText={(valor)=>setEvidencia({...evidencia, contextualizacao: valor})}  titulo='Contextualização' placeholder='Contextualização breve' tooltipTexto={'Descrever brevemente o tópico em questão e a importância da evidência na discussão. \n\nAjudará a entender a descrição mais abstrata da evidência a seguir.'}/>
+                                        <InputPersonalizado returnKeyType="go" onSubmitEditing={()=>avancarPagina()}  multiline={true} style={[{height: 130}, campoComErro === "contextualizacao" ? styles.inputErro : {}]} value={evidencia.contextualizacao} onChangeText={(valor)=>setEvidencia({...evidencia, contextualizacao: valor})}  titulo='Contextualização' placeholder='Contextualização breve' tooltipTexto={'Descrever brevemente o tópico em questão e a importância da evidência na discussão. \n\nAjudará a entender a descrição mais abstrata da evidência a seguir.'}/>
 
                                         <InputPersonalizado 
                                             multiline={true} 
@@ -558,6 +566,8 @@ export default function TelaCadastroEvidencia(){
                                     />
 
                                     <InputPersonalizado 
+                                        returnKeyType="go" onSubmitEditing={()=>avancarPagina()}
+                                        autoCapitalize='none'
                                         titulo='Link da fonte' 
                                         placeholder='https://exemplo.com' 
                                         style={campoComErro === "linkFonte" ? styles.inputErro : {}} 
@@ -706,6 +716,8 @@ export default function TelaCadastroEvidencia(){
                                                 conflitosInteresse: valor
                                             }
                                         })} 
+                                        returnKeyType="go" 
+                                        onSubmitEditing={()=>avancarPagina()}
                                         tooltipTexto='Verifique se há possíveis conflitos de interesse que possam influenciar a objetividade dos resultados.' 
                                     />
 
@@ -867,6 +879,7 @@ export default function TelaCadastroEvidencia(){
                                             itensSelect={[{valor: "1", descricao: "1 - Frequente "}, {valor: "2", descricao: "2 - Provável"}, {valor: "3", descricao: "3 - Ocasional"}, {valor: "4", descricao: "4 - Remoto"}, {valor: "5", descricao: "5 - Improvável"}, {valor: "6", descricao: "6 - Eliminado"}]} 
                                             valoresSelecionadosSelect={[(evidencia[("avaliador"+avaliador) as keyof typeof evidencia]! as IAvaliacao).probabilidadeFalha]}
                                             tooltipTexto='Defina um valor de 1 à 6' 
+                                            returnKeyType="go" onSubmitEditing={()=>avancarPagina()}
                                         />
                                     }
                                     <InputPersonalizado 
@@ -1018,6 +1031,8 @@ export default function TelaCadastroEvidencia(){
                                         itensSelect={[{valor: "1", descricao: "1 - Frequente "}, {valor: "2", descricao: "2 - Provável"}, {valor: "3", descricao: "3 - Ocasional"}, {valor: "4", descricao: "4 - Remoto"}, {valor: "5", descricao: "5 - Improvável"}, {valor: "6", descricao: "6 - Eliminado"}]} 
                                         valoresSelecionadosSelect={[(evidencia[("avaliador"+avaliador) as keyof typeof evidencia]! as IAvaliacao).probabilidadeFalha]}
                                         tooltipTexto='Defina um valor de 1 à 6' 
+                                        returnKeyType="go" 
+                                        onSubmitEditing={()=>avancarPagina()}
                                     />
 
                                     <Botao titulo="Avançar" style={styles.botao} onPress={()=>avancarPagina()}/>

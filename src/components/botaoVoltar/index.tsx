@@ -1,5 +1,5 @@
 import { styles } from './styles';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image,  TouchableOpacity,  View } from 'react-native';
 import Texto from '@/src/components/texto';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/src/navigations';

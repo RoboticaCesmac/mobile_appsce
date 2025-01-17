@@ -7,7 +7,7 @@ export interface IErroEvidencia{
     pagina: number
 }
 
-export default function validarCamposEvidencia(evidencia: IEvidencia | IAvaliacao, validacaoParcial: boolean = false):IErroEvidencia | undefined | boolean{
+export default function validarCamposEvidencia(evidencia: IEvidencia | IAvaliacao, dadosEvidencia: IEvidencia, validacaoParcial: boolean = false):IErroEvidencia | undefined | boolean{
     
     if(validacaoParcial){
         evidencia = evidencia as IEvidencia;
@@ -87,8 +87,14 @@ export default function validarCamposEvidencia(evidencia: IEvidencia | IAvaliaca
         else if(avaliacao.grauDeImportancia === ""){
             return {pagina: 5, mensagem: "Determine o grau de importância!", campo: 'grauDeImportancia'};
         }
-        else if(avaliacao.probabilidadeFalha === ""){
-            return {pagina: 5, mensagem: "Determine a probabilidade de falha!", campo: 'probabilidadeFalha'};
+        else 
+        
+        if(avaliacao.probabilidadeFalha === ""){
+            if(dadosEvidencia.categoria === "hardware"){
+                return {pagina: 5, mensagem: "Determine a probabilidade de falha!", campo: 'probabilidadeFalha'};
+            }else{
+                return {pagina: 6, mensagem: "Determine a probabilidade de falha!", campo: 'probabilidadeFalha'};
+            }
         }
         
         else if(avaliacao.justificativa === ""){

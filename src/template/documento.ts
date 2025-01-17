@@ -113,7 +113,7 @@ export default function getTemplate(evidencia: IEvidencia):string{
     <html>
         
         <div style="display: flex; margin-bottom: 20px;">
-            <img src="${getImagem()}" alt="sce" style="width: 200px; margin-left: 100px"/>
+            <img src="${getImagem()}" alt="sce" style="width: 200px; height: 110px; margin-left: 100px"/>
             <div style="display: flex; flex: 1; justify-content: center; align-items: center">
             	<b style="font-family: arial; font-size: 50px">AppSCE</b>
             </div>

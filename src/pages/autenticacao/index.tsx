@@ -1,4 +1,4 @@
-import { Pressable, Image,  View, ToastAndroid, ScrollView } from 'react-native';
+import { Image,  View, ToastAndroid, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -65,6 +65,7 @@ export default function TelaAutenticacao(){
                 await AsyncStorage.removeItem('emailLembrado');
             }
         }catch(erro:any){
+            console.log("Erro " + erro)
             ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
         }finally{
             setEstadoLoading("");
@@ -107,9 +108,9 @@ export default function TelaAutenticacao(){
                     <Texto style={styles.titulo}>LOGIN</Texto>
 
                     <View style={styles.card}>
-                        <InputPersonalizado autoCapitalize='none' value={dados.email} onChangeText={(valor)=>setDados({...dados, email: valor})} keyboardType='email-address' titulo='E-mail' placeholder='exemplo@email.com'/>
+                        <InputPersonalizado returnKeyType="next" autoCapitalize='none' value={dados.email} onChangeText={(valor)=>setDados({...dados, email: valor})} keyboardType='email-address' titulo='E-mail' placeholder='exemplo@email.com'/>
                         
-                        <InputPersonalizado autoCapitalize='none' value={dados.senha} onChangeText={(valor)=>setDados({...dados, senha: valor})} secureTextEntry={true} titulo='Senha' placeholder='*******'/>
+                        <InputPersonalizado returnKeyType="go" onSubmitEditing={()=>autenticar()} autoCapitalize='none' value={dados.senha} onChangeText={(valor)=>setDados({...dados, senha: valor})} secureTextEntry={true} titulo='Senha' placeholder='*******'/>
 
                         <View style={styles.checkboxContainer}>
                             <Checkbox  onValueChange={()=>setDados({...dados, lembrar: !dados.lembrar})} value={dados.lembrar} style={styles.checkbox} color={dados.lembrar ? cores.botaoPrimario : cores.bordaContainer}/>

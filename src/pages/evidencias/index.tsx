@@ -122,7 +122,9 @@ export default function TelaEvidencias(){
                     <View style={styles.cabecalhoCard}>
                         <BarraDePesquisa onChangeText={(valor)=>setPalavraPesquisa(valor)} value={palavraPesquisa} titulo='Evidências cadastradas' placeholder='🔍 Pesquisar...' onAlterarVisibilidade={(callback) => (alterarVisibilidadeRef.current = callback)} />
                         <Botao iconeEsquerda={'pesquisar'} style={styles.botaoPesquisar} onPress={()=>alternarVisibilidade()}/>
-                        <Botao iconeEsquerda={'adicionar'} style={styles.botaoAdicionar} onPress={()=>navigation.navigate('cadastroEvidencia', {evidencia: undefined, projeto: projetoRecebido})}/>
+                        {projetoRecebido.uid === auth.currentUser?.uid && // Libera cadastrar somente no próprio projeto
+                            <Botao iconeEsquerda={'adicionar'} style={styles.botaoAdicionar} onPress={()=>navigation.navigate('cadastroEvidencia', {evidencia: undefined, projeto: projetoRecebido})}/>
+                        }
                     </View>
 
                     <View style={styles.containerLista}>

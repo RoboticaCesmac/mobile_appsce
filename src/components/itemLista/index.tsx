@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Image,  View, ViewProps, ScrollView, Animated, useAnimatedValue, Easing, Pressable } from 'react-native';
 import { Botao } from '../botao';
 import Texto from '../texto';
-import { medalhaType, medalhas } from '@/src/types/icones';
+import { medalhaType } from '@/src/types/icones';
 
 import { styles } from './styles';
 
@@ -60,7 +60,7 @@ export function ItemLista(props: IItemProjeto){
 
     return(
         <View {...props} style={[styles.itemProjeto, props.style]}>
-            {props.medalha !== undefined &&
+            {(props.medalha !== undefined && props.medalha.toString() !== "") &&
                 <Image style={styles.iconeMedalha} resizeMode='contain' source={props.medalha === 'bronze' ? require('../../assets/icones/medalha-bronze.png') : props.medalha === 'cobre' ? require('../../assets/icones/medalha-cobre.png') : props.medalha === 'ouro' ? require('../../assets/icones/medalha-ouro.png') : require('../../assets/icones/medalha-prata.png')}/>
             }
 

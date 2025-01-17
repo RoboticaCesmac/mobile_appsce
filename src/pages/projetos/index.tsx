@@ -1,4 +1,4 @@
-import { Image,  View, Alert, ToastAndroid, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { Image,  View, Alert, ToastAndroid, FlatList, Dimensions } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import HideWithKeyboard from 'react-native-hide-with-keyboard';
@@ -25,6 +25,7 @@ import { styles } from './styles';
 import BarraDePesquisa from '@/src/components/barraDePesquisa';
 import { IEvidencia } from '@/src/interfaces/evidencia';
 import { IUsuario, TipoAvaliador } from '@/src/interfaces/usuario';
+import { TouchableOpacity } from 'react-native';
 
 export default function TelaProjetos(){
     const navigation = useNavigation<RootStackParamList>();
