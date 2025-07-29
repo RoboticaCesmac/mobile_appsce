@@ -1,4 +1,4 @@
-import { Pressable, Image,  View, ToastAndroid, ScrollView } from 'react-native';
+import { Pressable, Image,  View, ToastAndroid, ScrollView, Platform, Alert } from 'react-native';
 import { useState } from 'react';
 import HideWithKeyboard from 'react-native-hide-with-keyboard';
 import Checkbox from 'expo-checkbox';
@@ -45,19 +45,31 @@ export default function TelaCadastroUsuario(){
             // Atualiza no banco de dados
             await setDoc(doc(db, "usuarios", usuario.id!), {nome: usuario.nome, id: usuario.id, email: usuario.email, admin: usuario.admin, avaliador: usuario.avaliador, tipoAvaliador: usuario.tipoAvaliador});
 
-            ToastAndroid.show("Seja bem-vindo(a), " + usuario.nome + "!", ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show("Seja bem-vindo(a), " + usuario.nome + "!", ToastAndroid.LONG);
+            }
 
             // Redireciona para o menu
             navigation.navigate("projetos");
         }catch(erro:any){
-            ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setEstadoLoading("");
         }
     }
 
     return(
-        <ScrollView style={{minHeight: '100%', backgroundColor: cores.fundoGradiente1}}>
+        <View style={{minHeight: '100%', backgroundColor: cores.fundoGradiente1}}>
             <LinearGradient colors={[cores.fundoGradiente1, cores.fundoGradiente2]} style={styles.pagina}>
                 <View style={styles.container}>
 
@@ -81,6 +93,6 @@ export default function TelaCadastroUsuario(){
                 </View>
                 <Loader texto={estadoLoading}/>
             </LinearGradient>
-        </ScrollView>
+        </View>
     )
 }

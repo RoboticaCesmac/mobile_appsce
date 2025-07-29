@@ -15,6 +15,7 @@ export interface IEvidencia {
     avaliador3?: IAvaliacao,
     final: IAvaliacao,
     projetoId?: string,
+    AnaliseSceAI?: string
 }
 
 export type tipoEvidencia = "software" | "hardware" | "";

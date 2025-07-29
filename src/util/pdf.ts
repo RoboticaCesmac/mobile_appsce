@@ -4,11 +4,43 @@ import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import getTemplate from "../template/documento";
 import { Dispatch, SetStateAction } from "react";
-import { ToastAndroid } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
+import {  analisarEvidencia } from "../services/openaiService";
 
 /**Gera um pdf de evidência */
-export async function gerarPdfEAbrir(evidencia: IEvidencia, setTextoLoader: Dispatch<SetStateAction<string>>) {
-    
+export async function verificarEvidencia(evidencia: IEvidencia, setTextoLoader: Dispatch<SetStateAction<string>>) {
+    console.log("!")
+    await Alert.alert(
+        '✨ I.A SCE✨',
+        'Deseja utilizar a I.A SCE para realizar uma análise no documento?',
+        [
+            {
+                text: 'Sim',
+                onPress: async ()=>{
+                    try{
+                        setTextoLoader("✨ Analisando ✨");
+                        evidencia.final.AnaliseSceAI = await analisarEvidencia(evidencia.final);
+                        gerarPdfEAbrir(evidencia, setTextoLoader);
+                    }catch(e){
+                        console.error(e);
+                        alert(e);
+                        setTextoLoader("");
+                    }
+                    
+                }
+            },
+            {
+                text: 'Não',
+                style: 'cancel',
+                onPress: ()=>{gerarPdfEAbrir(evidencia, setTextoLoader)}
+            },
+        ],
+        
+    )
+   
+};
+
+async function gerarPdfEAbrir(evidencia: IEvidencia, setTextoLoader: Dispatch<SetStateAction<string>>) {
     try {
         setTextoLoader("Gerando PDF...");
         const timeoutPromise = new Promise((_, reject) =>

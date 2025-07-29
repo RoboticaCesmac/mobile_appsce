@@ -1,4 +1,4 @@
-import { Image,  View, ToastAndroid, ScrollView } from 'react-native';
+import { Image,  View, ToastAndroid, Platform, Alert } from 'react-native';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRoute } from '@react-navigation/native';
@@ -30,6 +30,8 @@ import { IUsuario } from '@/src/interfaces/usuario';
 import { medalhaType } from '@/src/types/icones';
 import Tooltip from '@/src/components/tooltip';
 import { TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import traduzirErro from '@/src/util/firebasePTBR';
 
 
 export default function TelaCadastroEvidencia(){
@@ -238,7 +240,17 @@ export default function TelaCadastroEvidencia(){
 
         }catch(erro:any){
             console.error(erro);
-            ToastAndroid.show(erro.message, ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setEstadoLoading("");
         }
@@ -283,7 +295,17 @@ export default function TelaCadastroEvidencia(){
 
         }catch(erro:any){
             console.error(erro);
-            ToastAndroid.show(erro.message, ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setEstadoLoading("");
         }
@@ -309,14 +331,25 @@ export default function TelaCadastroEvidencia(){
             
       
         }catch(erro:any){
-            ToastAndroid.show(erro.message, ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
+
         }finally{
             setEstadoLoading("");
         }
     }
 
     return(
-        <ScrollView style={{minHeight: '100%', backgroundColor: cores.fundoGradiente1}}>
+        <View style={{minHeight: '100%', backgroundColor: cores.fundoGradiente1}}>
             <LinearGradient colors={[cores.fundoGradiente1, cores.fundoGradiente2]} style={styles.pagina}>
                 
                 <View style={styles.container}>
@@ -1065,6 +1098,6 @@ export default function TelaCadastroEvidencia(){
 
             <BotaoVoltar onPress={()=>(pagina===1||pagina===0)?navigation.goBack():setPagina(pagina-(pagina === 7 && evidencia.categoria === "hardware"?2:1))}/>
             <Loader texto={estadoLoading}/>
-        </ScrollView>
+        </View>
     )
 }

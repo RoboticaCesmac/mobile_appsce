@@ -1,4 +1,4 @@
-import { Image,  View, ToastAndroid, ScrollView } from 'react-native';
+import { Image,  View, ToastAndroid, ScrollView, Platform, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -66,7 +66,17 @@ export default function TelaAutenticacao(){
             }
         }catch(erro:any){
             console.log("Erro " + erro)
-            ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setEstadoLoading("");
         }
@@ -91,17 +101,37 @@ export default function TelaAutenticacao(){
             
             // Fecha o modal de redefinição e abre o de conclusão
             setModalVisivel(false);
-            ToastAndroid.show("Verifique seu e-mail e siga as instruções para redefinir a senha!", 5000);
+            if(Platform.OS === "android"){
+                ToastAndroid.show("Verifique seu e-mail e siga as instruções para redefinir a senha!", 5000);
+            }else{
+                Alert.alert(
+                    'Ok',
+                    "Verifique seu e-mail e siga as instruções para redefinir a senha!",
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }catch(erro:any){
             // Traduz se for um erro do firebase e apenas imprime o erro se não for.
-            ToastAndroid.show(erro.name==="Error" ? erro.message : traduzirErro(erro.message), ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error" ? erro.message : traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error" ? erro.message : traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setEstadoLoading("");
         }
     }
 
     return(
-        <ScrollView style={{minHeight: '100%', backgroundColor: cores.fundoGradiente1}}>
+        <View style={{minHeight: '100%', backgroundColor: cores.fundoGradiente1}}>
             <LinearGradient colors={[cores.fundoGradiente1, cores.fundoGradiente2]} style={styles.pagina}>
                 <View style={styles.container}>
                     <Image style={styles.logo} resizeMode='contain' source={require('../../assets/imagens/logo.png')}/> 
@@ -131,6 +161,6 @@ export default function TelaAutenticacao(){
             <ModalPersonalizado tituloModal='Recuperar Senha' descricaoModal='Insira seu e-mail para receber um link com istruções para alterar a sua senha.' modalVisivel={modalVisivel} posicao='inferior' tituloBotao='Enviar' onPressBotao={()=>redefinirSenha()} onClose={()=>setModalVisivel(false)}>
                 <InputPersonalizado value={dados.email} onChangeText={(valor)=>setDados({...dados, email: valor})} titulo='E-mail'/>
             </ModalPersonalizado>
-        </ScrollView>
+        </View>
     )
 }

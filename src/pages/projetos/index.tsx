@@ -1,4 +1,4 @@
-import { Image,  View, Alert, ToastAndroid, FlatList, Dimensions } from 'react-native';
+import { Image,  View, Alert, ToastAndroid, FlatList, Dimensions, Platform } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import HideWithKeyboard from 'react-native-hide-with-keyboard';
@@ -89,7 +89,17 @@ export default function TelaProjetos(){
             setProjetos([...listaProjetos, ...listaProjetosAdmin.filter(item2 => !listaProjetos.some(item1 => item1.id === item2.id))]);
             setProjetosOriginal([...listaProjetos, ...listaProjetosAdmin.filter(item2 => !listaProjetos.some(item1 => item1.id === item2.id))]);
         }catch(erro:any){
-            ToastAndroid.show(traduzirErro(erro), ToastAndroid.SHORT);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setTextoLoader("");
         }
@@ -174,7 +184,17 @@ export default function TelaProjetos(){
             setProjeto(undefined);
             buscarProjetos();
         }catch(erro:any){
-            ToastAndroid.show(erro.message, ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setTextoLoader("");
         }
@@ -242,7 +262,17 @@ export default function TelaProjetos(){
             
             setProjeto(undefined);
         }catch(erro:any){
-            ToastAndroid.show(erro.message, ToastAndroid.LONG);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setTextoLoader("");
         }

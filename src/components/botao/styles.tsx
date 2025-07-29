@@ -6,6 +6,8 @@ export const styles = StyleSheet.create({
     ...globalStyles,
 
     botao: {
+        elevation: 9999,
+        zIndex: 9999,
         width: '100%',
         height: 40,
         borderRadius: 6,

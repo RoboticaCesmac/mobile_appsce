@@ -68,7 +68,7 @@ export function ItemLista(props: IItemProjeto){
                 <ScrollView horizontal={true} scrollEnabled={true} showsHorizontalScrollIndicator={false} onLayout={onScrollLayout} style={styles.scrollItemLista} onTouchEnd={props.onPressVisualizar}>
                     
                     <Animated.View style={{transform: [{translateX: animacaoScroll}]}}>
-                        <Texto onLayout={onTextLayout} style={[styles.tituloProjeto, {minWidth: larguraScroll}, 
+                        <Texto onLayout={onTextLayout} style={[styles.tituloProjeto, {paddingVertical: 17, minWidth: larguraScroll}, 
                                 larguraTexto > larguraScroll ? {paddingLeft: larguraScroll} : {paddingLeft: 10}]}>{props.titulo}</Texto>
                     </Animated.View>
 

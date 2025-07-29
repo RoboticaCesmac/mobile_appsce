@@ -1,4 +1,4 @@
-import { Image,  View, Alert, ToastAndroid, FlatList } from 'react-native';
+import { Image,  View, Alert, ToastAndroid, FlatList, Platform } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 
 import { Botao } from '@/src/components/botao';
@@ -27,7 +27,7 @@ import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'fireb
 import traduzirErro from '@/src/util/firebasePTBR';
 import { IEvidencia } from '@/src/interfaces/evidencia';
 import getTemplate from '@/src/template/documento';
-import { gerarPdfEAbrir, gerarPdfEAbrirComTodas } from '@/src/util/pdf';
+import {  gerarPdfEAbrirComTodas, verificarEvidencia } from '@/src/util/pdf';
 import { IUsuario } from '@/src/interfaces/usuario';
 
 export default function TelaEvidencias(){
@@ -76,7 +76,17 @@ export default function TelaEvidencias(){
             setEvidencias(listaEvidencias);
             setEvidenciasOriginais(listaEvidencias);
         }catch(erro:any){
-            ToastAndroid.show(traduzirErro(erro), ToastAndroid.SHORT);
+            if(Platform.OS === "android"){
+                ToastAndroid.show(erro.name==="Error"?erro.message:traduzirErro(erro.message), ToastAndroid.LONG);
+            }else{
+                Alert.alert(
+                    'Erro',
+                    erro.name==="Error"?erro.message:traduzirErro(erro.message),
+                    [{
+                        text: 'OK',
+                    }]
+                );
+            }
         }finally{
             setTextoLoader("");
         }
@@ -134,7 +144,7 @@ export default function TelaEvidencias(){
                             <FlatList
                                 style={{width: '100%'}}
                                 data={evidencias}
-                                renderItem={({item, index}) => <ItemLista key={item.id} medalha={item.final.selo as medalhaType} titulo={item.nome} onPressImprimir={() => gerarPdfEAbrir(item, setTextoLoader)} onPressApagar={()=>excluirEvidencia(item)} onPressEditar={()=>navigation.navigate('cadastroEvidencia', {evidencia: item, projeto: projetoRecebido})}/>}
+                                renderItem={({item, index}) => <ItemLista key={item.id} medalha={item.final.selo as medalhaType} titulo={item.nome} onPressImprimir={() => verificarEvidencia(item, setTextoLoader)} onPressApagar={()=>excluirEvidencia(item)} onPressEditar={()=>navigation.navigate('cadastroEvidencia', {evidencia: item, projeto: projetoRecebido})}/>}
                                 keyExtractor={item => item.id!}
 
                             />

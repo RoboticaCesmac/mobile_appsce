@@ -425,6 +425,23 @@ export default function getTemplate(evidencia: IEvidencia):string{
                 <p style="font-family: arial; margin: 0">${evidencia.final.classificacao}</p>
             </div>
         </div>
+
+        ${evidencia.final.AnaliseSceAI 
+            ?
+            `
+            <div style="border-width: 2 2px 2px 2px; border-style: solid; padding: 10px; border-width: 2px">
+                <div class="subtitulo-container" style="border-width: 0 0 2px 0; margin: -10px -10px 0 -10px">
+                    <b style="font-family: arial">✨ANÁLISE DA I.A SCE✨</b>
+                </div>
+                ${evidencia.final.AnaliseSceAI}
+            </div>
+
+
+            `
+            :
+            ""
+        }
+         
     </html>
     
     `

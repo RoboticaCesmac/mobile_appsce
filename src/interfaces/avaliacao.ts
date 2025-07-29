@@ -34,6 +34,7 @@ export interface IAvaliacao{
     selo: medalhaType | "",
     classificacao: string,
     opcoesSoftware?: IOpcSoftware,
+    AnaliseSceAI?: string
 }
 
 export interface IOpcSoftware{

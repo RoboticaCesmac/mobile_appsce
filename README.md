@@ -1,3 +1,39 @@
+# 
+# App SCE
+
+## Tecnologias do app
+##### - React Native com Expo
+##### - Linguagem Typescript
+#
+#
+#
+## Tecnologias do backend
+#### - Google Firebase authentication (autenticação de usuários)
+#### - Google Firebase Firestore (Banco de dados não-relacional)
+#
+#
+#
+#
+#
+# Instalando dependências e executando o app
+#
+### - Comando para instalar dependências:
+### `npm install`
+#
+### - Comando para executar o projeto:
+### `npx expo start`
+### ou
+### `npm start`
+
+
+
+
+
+
+
+
+
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
