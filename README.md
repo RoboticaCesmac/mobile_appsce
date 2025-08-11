@@ -6,7 +6,7 @@ Os Casos de Garantia de Segurança (CGS) tornaram-se elementos es- senciais e in
 
 ## Autores 
 Mozart Alves-Júnior, Alvaro Oliveira, Aldo Nunes, Sandeison Fernandes, Jaelson Castro
-mmaj@cin.ufpe.br, alvaro2014oliveira@gmail.com, aldonunes001@gmail.com, lfb@cin.ufpe.br, jbc@cin.ufpe.br
+mmaj@cin.ufpe.br, alvaro2014oliveira@gmail.com, aldonunes001@gmail.com, ssf2@cin.ufpe.br, jbc@cin.ufpe.br
 
 ## Tecnologias do app
 ##### - React Native com Expo
