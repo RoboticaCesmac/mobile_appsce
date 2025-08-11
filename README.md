@@ -1,6 +1,13 @@
 # 
 # App SCE
 
+## Introdução
+Os Casos de Garantia de Segurança (CGS) tornaram-se elementos es- senciais e indispensáveis na certificação de segurança em diversos domínios de sistemas críticos. Esses processos de certificação são rigorosos e exigem argu- mentos sólidos, sustentados por um conjunto de evidências de alta qualidade que comprovem a segurança e a adequação do sistema ao seu ambiente de uso específico. No entanto, a avaliação dessas evidências frequentemente depende do julgamento humano, o que pode estar sujeito a vieses cognitivos, comprome- tendo a validade dos argumentos apresentados. Este trabalho apresenta o appS- CE (App for Safety Classification of Evidence), uma ferramenta de código aberto, acessível via web, que segue uma arquitetura cliente-servidor e utiliza tecnologias como TypeScript, React Native, Node.js e Firebase Firestore. O ap- pSCE apoia a abordagem Classify Evidence, que visa classificar a qualidade das evidências de segurança utilizadas na construção dos CGS. O objetivo do aplicativo é facilitar o controle e gerenciamento da classificação das evidências, tornando-as mais dinâmicas e acessíveis, e, desta, contribuir para uma comuni- cação mais eficaz e confiável entre os stakeholders envolvidos.
+
+## Autores 
+Mozart Alves-Júnior, Alvaro Oliveira, Aldo Nunes, Sandeison Fernandes, Jaelson Castro
+mmaj@cin.ufpe.br, alvaro2014oliveira@gmail.com, aldonunes001@gmail.com, lfb@cin.ufpe.br, jbc@cin.ufpe.br
+
 ## Tecnologias do app
 ##### - React Native com Expo
 ##### - Linguagem Typescript
@@ -84,3 +91,5 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
