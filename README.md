@@ -14,16 +14,11 @@ https://www.youtube.com/watch?v=M0k1C3n4_IA
 ## Tecnologias do app
 ##### - React Native com Expo
 ##### - Linguagem Typescript
-#
-#
+##### - Node.js
 #
 ## Tecnologias do backend
 #### - Google Firebase authentication (autenticação de usuários)
 #### - Google Firebase Firestore (Banco de dados não-relacional)
-#
-#
-#
-#
 #
 # Instalando dependências e executando o app
 #
@@ -34,14 +29,6 @@ https://www.youtube.com/watch?v=M0k1C3n4_IA
 ### `npx expo start`
 ### ou
 ### `npm start`
-
-
-
-
-
-
-
-
 
 
 # Welcome to your Expo app 👋
